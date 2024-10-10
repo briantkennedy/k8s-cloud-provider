@@ -38,13 +38,13 @@ const (
 	gofmt                      = "gofmt"
 	packageRoot                = "github.com/GoogleCloudPlatform/k8s-cloud-provider/pkg/cloud"
 	googleAPIPackage           = "google.golang.org/api/googleapi"
-	kLogPackage                = "k8s.io/klog/v2"
+	klogPackage                = "k8s.io/klog/v2"
 	alphaComputePackage        = "google.golang.org/api/compute/v0.alpha"
 	betaComputePackage         = "google.golang.org/api/compute/v0.beta"
 	gaComputePackage           = "google.golang.org/api/compute/v1"
 	betaNetworkServicesPackage = "google.golang.org/api/networkservices/v1beta1"
 	gaNetworkServicesPackage   = "google.golang.org/api/networkservices/v1"
-	kLogEnabled                = ".Enabled()"
+	klogEnabled                = ".Enabled()"
 
 	filterPackage = packageRoot + "/filter"
 	metaPackage   = packageRoot + "/meta"
@@ -120,7 +120,7 @@ import (
 	values := map[string]string{
 		"Year":             fmt.Sprintf("%v", time.Now().Year()),
 		"GoogleAPIPackage": googleAPIPackage,
-		"KLogPackage":      kLogPackage,
+		"KLogPackage":      klogPackage,
 		"FilterPackage":    filterPackage,
 		"MetaPackage":      metaPackage,
 	}
@@ -165,7 +165,7 @@ import (
 
 	const kLogAdapter = `
 
-func kLogEnabled(level klog.Level) bool {
+func klogEnabled(level klog.Level) bool {
 	return klog.V(level){{.KLogEnabled}} == true
 }
 
@@ -173,7 +173,7 @@ func kLogEnabled(level klog.Level) bool {
 
 	kLogAdapterTemplate := template.Must(template.New("klogadapter").Parse(kLogAdapter))
 	kLogTemplateValues := map[string]string{
-		"KLogEnabled": kLogEnabled,
+		"KLogEnabled": klogEnabled,
 	}
 	if err := kLogAdapterTemplate.Execute(wr, kLogTemplateValues); err != nil {
 		panic(err)
@@ -881,9 +881,9 @@ func (g *{{.GCPWrapType}}) List(ctx context.Context, zone string, fl *filter.F, 
         callObserverEnd(ctx, ck, nil)
 	g.s.RateLimiter.Observe(ctx, nil, ck)
 
-	if kLogEnabled(4) {
+	if klogEnabled(4) {
 		klog.V(4).Infof("{{.GCPWrapType}}.List(%v, ..., %v) = [%v items], %v", ctx, fl, len(all), nil)
-	} else if kLogEnabled(5) {
+	} else if klogEnabled(5) {
 		var asStr []string
 		for _, o := range all {
 			asStr = append(asStr, fmt.Sprintf("%+v", o))
@@ -1066,9 +1066,9 @@ func (g *{{.GCPWrapType}}) AggregatedList(ctx context.Context, fl *filter.F, opt
 	callObserverEnd(ctx, ck, nil)
 	g.s.RateLimiter.Observe(ctx, nil, ck)
 
-	if kLogEnabled(4) {
+	if klogEnabled(4) {
 		klog.V(4).Infof("{{.GCPWrapType}}.AggregatedList(%v, %v) = [%v items], %v", ctx, fl, len(all), nil)
-	} else if kLogEnabled(5) {
+	} else if klogEnabled(5) {
 		var asStr []string
 		for _, o := range all {
 			asStr = append(asStr, fmt.Sprintf("%+v", o))
@@ -1118,9 +1118,9 @@ func (g *{{.GCPWrapType}}) ListUsable(ctx context.Context, fl *filter.F, options
 	callObserverEnd(ctx, ck, nil)
 	g.s.RateLimiter.Observe(ctx, nil, ck)
 
-	if kLogEnabled(4) {
+	if klogEnabled(4) {
 		klog.V(4).Infof("{{.GCPWrapType}}.ListUsable(%v, ..., %v) = [%v items], %v", ctx, fl, len(all), nil)
-	} else if kLogEnabled(5) {
+	} else if klogEnabled(5) {
 		var asStr []string
 		for _, o := range all {
 			asStr = append(asStr, fmt.Sprintf("%+v", o))
@@ -1229,9 +1229,9 @@ func (g *{{.GCPWrapType}}) {{.FcnArgs}} {
         callObserverEnd(ctx, ck, nil)
 	g.s.RateLimiter.Observe(ctx, nil, ck)
 
-	if kLogEnabled(4) {
+	if klogEnabled(4) {
 		klog.V(4).Infof("{{.GCPWrapType}}.{{.Name}}(%v, %v, ...) = [%v items], %v", ctx, key, len(all), nil)
-	} else if kLogEnabled(5) {
+	} else if klogEnabled(5) {
 		var asStr []string
 		for _, o := range all {
 			asStr = append(asStr, fmt.Sprintf("%+v", o))
